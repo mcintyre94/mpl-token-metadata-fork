@@ -3,7 +3,7 @@
 use std::io::{Error, ErrorKind};
 
 use borsh::BorshDeserialize;
-use solana_program::pubkey::Pubkey;
+use solana_pubkey::Pubkey;
 
 use crate::{
     accounts::{
@@ -69,10 +69,6 @@ impl Default for UpdateV1InstructionArgs {
         }
     }
 }
-
-// Token Standard
-
-impl Copy for TokenStandard {}
 
 // Metadata
 
@@ -296,7 +292,3 @@ impl UpdateArgs {
         }
     }
 }
-
-// Key
-
-impl Copy for Key {}

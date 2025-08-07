@@ -45,7 +45,10 @@ const {
 } = require("codama");
 const { writeFileSync } = require("node:fs");
 const path = require("node:path");
-const { renderJavaScriptUmiVisitor } = require("@codama/renderers");
+const {
+  renderJavaScriptUmiVisitor,
+  renderRustVisitor,
+} = require("@codama/renderers");
 
 // Paths.
 const clientDir = path.join(__dirname, "..", "clients");
@@ -1125,24 +1128,38 @@ writeFileSync(
 );
 
 // Render JavaScript.
+const linkOverrides = {
+  definedTypes: {
+    metadataDelegateRoleSeed: "hooked",
+    holderDelegateRoleSeed: "hooked",
+  },
+  resolvers: {
+    resolveIsNonFungibleOrIsMintSigner: "hooked",
+  },
+  pdas: {
+    associatedToken: "mplToolbox",
+    editionMarkerFromEditionNumber: "hooked",
+  },
+};
+
 const jsDir = path.join(clientDir, "js", "src", "generated");
 codama.accept(
   renderJavaScriptUmiVisitor(jsDir, {
-    linkOverrides: {
-      definedTypes: {
-        metadataDelegateRoleSeed: "hooked",
-        holderDelegateRoleSeed: "hooked",
-      },
-      resolvers: {
-        resolveIsNonFungibleOrIsMintSigner: "hooked",
-      },
-      pdas: {
-        associatedToken: "mplToolbox",
-        editionMarkerFromEditionNumber: "hooked",
-      },
-    },
     deleteFolderBeforeRendering: true,
     formatCode: true,
+    linkOverrides,
     prettierOptions,
+  })
+);
+
+const crateDir = path.join(clientDir, "rust");
+const rustDir = path.join(clientDir, "rust", "src", "generated");
+codama.accept(
+  renderRustVisitor(rustDir, {
+    formatCode: true,
+    crateFolder: crateDir,
+    anchorTraits: true,
+    renderParentInstructions: true,
+    linkOverrides,
   })
 );

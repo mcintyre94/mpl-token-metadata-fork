@@ -75,7 +75,7 @@ mod lock {
             .edition(Some(asset.master_edition))
             .mint(asset.mint.pubkey())
             .token(asset.token)
-            .spl_token_program(Some(spl_token_program))
+            .spl_token_program(spl_token_program)
             .payer(payer.pubkey())
             .instruction();
 
